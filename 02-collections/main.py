@@ -44,7 +44,8 @@ def group_students_by_subject(data: list[tuple[str, str, str]]) -> dict[str, lis
         stnum = line[1]
         subj = line[2]
 
-        subj_index = students_by_subject.index(subj)
+        print(f'n:{name} stn:{stnum} subj:{subj}')
+        subj_index = list(subjects).index(subj)
         st = Student(name, stnum)
         students_by_subject[subj_index].append(st)
 

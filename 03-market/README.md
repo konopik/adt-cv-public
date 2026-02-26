@@ -28,6 +28,7 @@ Každý řádek datového souboru (kromě hlavičky) obsahuje informace oddělen
 
 Data ke stažení :
 [[liks]](https://liks.fav.zcu.cz/adt/exam/service/download-data?filename=cities.zip)
+[[Alternativní odkaz]](https://drive.google.com/file/d/1qgRsJB8yJg6sOdjlD8VtBEFodqRxOCLP/view?usp=sharing)
 
 ## Zadání
 

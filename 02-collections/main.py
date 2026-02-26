@@ -27,6 +27,7 @@ def get_unique_subjects(data: list[tuple[str, str, str]]) -> set[str]:
         result.add(i[2])
     return result
 
+
 def group_students_by_subject(data: list[tuple[str, str, str]]) -> dict[str, list[Student]]:
     """
     Vrátí slovník, kde klíčem je předmět a hodnotou seznam studentů (instancí třídy Student),
@@ -80,3 +81,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    print("hotovo")

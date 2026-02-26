@@ -6,3 +6,5 @@ for i in range(len(names)):
         pairs.append(names[i] + " - " + names[i+1])
 
 print(pairs)
+
+

@@ -4,8 +4,8 @@
 |-------|--------------------------------------------------------|--------------------|
 | cv 01      | REPL, VSCode, parsování parametrů, jednoduché prográmky| python, VSCode            |
 | cv 02      | Jednoduchá aplikace pro analýzu databáze osob          | csv; soubor, PPA          |
-| cv 04      | Experimenty s datovými strukturami a jejich rychlostmi | dict, set, list, obj      |
 | cv 03      | Aplikace pro analýzu dat z prodejen obchodního řetězce | aplikace dist; set        |
+| cv 04      | Experimenty s datovými strukturami a jejich rychlostmi | dict, set, list, obj      |
 | cv 05      | __ZÁPOČET 1__                                          |                           |
 | cv 06      | Framework pro simulaci systému hromadné obsluhy        | Objekty, čas              |
 | cv 07      | Sudoku                                                 | Backtracking, 2d pole     |

@@ -110,9 +110,13 @@ def get_q_size(data: dict[str, list[Record]], seconds: int) -> int:
     return len(before_paying.difference(paid))
 
 def histogram(data: dict[str, list[Record]]) -> None:
+    # for time in range(24):
+    #     print(time+1, end=" ")
+    # print(" ")
     for time in range(24):
         pocet = get_q_size(data, time*hodin)
         print(pocet, end=" ")
+    print(" ")
 
 def main(data_path: str) -> None:
     while True:

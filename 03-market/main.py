@@ -26,10 +26,16 @@ def load_data(data_path: str, city: str, shop: str, day: str = "1-Mon") -> \
     # pozn. Můžeme použít default dict, nebo použít běžný slovník a při přidání nového záznamu
     # vždy zkontrolovat, zda klíč již existuje, případně inicializovat prázdný list
 
-    city_data: dict[str, list[Record]] = {}
-    # city_data: dict[str, list[Record]] = defaultdict(list)
-
+    # city_data: dict[str, list[Record]] = {}
+    city_data: dict[str, list[Record]] = defaultdict(list)
     print("loading", city)
+
+    path = os.path.join(data_path, city, day, shop+".txt")
+    with open(path, "r", encoding="utf-8") as file:
+        _ = file.readline()
+        lines = file.readlines()
+        
+
 
     return city_data
 
@@ -86,6 +92,7 @@ def main(data_path: str) -> None:
         histogram(data)
 
 if __name__ == "__main__":
+    print(sys.argv)
     if len(sys.argv) < 2:
         print("Usage: python main.py <data_path>")
         sys.exit(1)

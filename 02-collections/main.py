@@ -49,7 +49,7 @@ def group_students_by_subject(data: list[tuple[str, str, str]]) -> dict[str, lis
         subject = entry[2]
         student = Student(entry[0], entry[1])
         groups[subject].append(student)
-    
+
     return groups
 
 
@@ -62,7 +62,7 @@ def get_unique_students(data: list[tuple[str, str, str]]) -> set[Student]:
     students = []
     for entry in data:
         students.append(Student(entry[0], entry[1]))
-    
+
     return set(students) # PLACEHOLDER
 
 

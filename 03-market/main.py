@@ -8,6 +8,8 @@ class Record:
     time: int
     id_cust: int
 
+hodin = 3600
+
 def load_data(data_path: str, city: str, shop: str, day: str = "1-Mon") -> \
         dict[str, list[Record]] | None:
     """ Funkce načte data z daného souboru a vrátí je jako slovník.
@@ -34,7 +36,16 @@ def load_data(data_path: str, city: str, shop: str, day: str = "1-Mon") -> \
     with open(path, "r", encoding="utf-8") as file:
         _ = file.readline()
         lines = file.readlines()
-        
+        try:
+            for line in lines:
+                line.strip()
+                splited = line.split(";")
+                time, ckpt, cid, price = splited
+
+                rec = Record(int(time), int(cid))
+                city_data[ckpt].append(rec)
+        except Exception as e:
+            print(f"Something went wrong: {e}")
 
 
     return city_data
@@ -52,6 +63,13 @@ def get_passed_set(data: dict[str, list[Record]], key_words: list[str]) -> set[i
         set[int]: Funkce vrací množinu identifikačních čísel zákazníků.
     """
     customers: set[int] = set()
+    for key, value in data.items():
+        norm_key = key.split("_")[0]
+
+        if norm_key in key_words:
+            for rec in value:
+                customers.add(rec.id_cust)
+
     return customers
 
 def filter_data_time(data: dict[str, list[Record]], cond_time: int) -> dict[str, list[Record]]:
@@ -63,6 +81,12 @@ def filter_data_time(data: dict[str, list[Record]], cond_time: int) -> dict[str,
         dict[str, list[Record]]: vrací data omezená na záznamy s časem menším nebo rovným cond_time.
     """
     ret: dict[str, list[Record]] = defaultdict(list)
+
+    for cpkt, records in data.items():
+        for record in records:
+            if record.time <= cond_time:
+                ret[cpkt].append(record)
+
     return ret
 
 def get_q_size(data: dict[str, list[Record]], seconds: int) -> int:
@@ -70,10 +94,25 @@ def get_q_size(data: dict[str, list[Record]], seconds: int) -> int:
     Velikost fronty je dána počtem zákazníků, kteří prošli některým z checkpointů
     (vege, frui, meat) a ještě neprošli pokladnou.
     """
-    return 0
+    fil = filter_data_time(data, seconds)
+    """
+    moje implementace
+    cust_fruit = len(get_passed_set(fil, ["frui"]))
+    cust_vegetable = len(get_passed_set(fil, ["vege"]))
+    cust_meat = len(get_passed_set(fil, ["meat"]))
+    cust_out = len(get_passed_set(fil, ["final-crs"]))
+    count = cust_fruit + cust_vegetable + cust_meat - cust_out
+    return count
+    """
+    before_paying = get_passed_set(fil, ["frui", "vege", "meat"])
+    paid = get_passed_set(fil, ["final-crs"])
+
+    return len(before_paying.difference(paid))
 
 def histogram(data: dict[str, list[Record]]) -> None:
-    pass
+    for time in range(24):
+        pocet = get_q_size(data, time*hodin)
+        print(pocet, end=" ")
 
 def main(data_path: str) -> None:
     while True:
@@ -86,6 +125,17 @@ def main(data_path: str) -> None:
             shop = "shop_a"
 
         data = load_data(data_path, city, shop)
+        # cust_in = get_passed_set(data, ["gate-keeper"])
+        # cust_out = get_passed_set(data, ["final-crs"])
+
+        # print(len(cust_in))
+        # print(len(cust_out))
+
+        # fil = filter_data_time(data, 1181)
+
+        # kolik = get_q_size(data, 15*60*60)
+        # print(kolik)
+
         if data is None:
             continue
 

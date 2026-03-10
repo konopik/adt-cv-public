@@ -104,3 +104,7 @@ python main.py path/to/cities Plzeň shop_b 2-Tue
 - **Počet unikátních prvků**: Čím více unikátních zákazníků v souboru je, tím pomalejší bude varianta s listem.
 
 ## K zamyšlení
+
+- **Proč je `list` tak pomalý?**
+- **Proč je `set` tak rychlý?**
+

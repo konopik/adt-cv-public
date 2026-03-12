@@ -9,9 +9,10 @@
             "name": "Python Debugger: Current File",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "program": "04-complexity_b/main.py",
             "console": "integratedTerminal",
-            "args": ["C:\\users\\triskaja\\documents\\adt-cv-public\\03-market\\output"]
+            // "args": ["C:/Users/triskaja/Documents/output"]
+            "args": ["../"]
         }
     ]
 }

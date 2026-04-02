@@ -66,20 +66,23 @@ class SudokuSolver:
         self.field[row,col] = 0
         return False
 
-def test_sudoku(file: str) -> None:
-    sudoku_solver = SudokuSolver()
-    sudoku_solver.load(file)
-    print(f"Before: \n{sudoku_solver.field}")
+def test_sudoku(sudoku: SudokuSolver) -> None:
+    print(f"Original: \n{sudoku.field}")
     print(" ")
-    if sudoku_solver.solve():
-        print(f"After: \n{sudoku_solver.field}")
+    if sudoku.solve():
+        print(f"Solved: \n{sudoku.field}")
     else:
         print("Cooked!")
 
 def main() -> None:
-    test_sudoku("07-backtracking/sudoku.csv")
+    sudoku_normal = SudokuSolver()
+    sudoku_normal.load("07-backtracking/sudoku.csv")
+    sudoku_null = SudokuSolver()
+    sudoku_null.load("07-backtracking/sudoku_null.csv")
+
+    test_sudoku(sudoku_normal)
     print(" ")
-    test_sudoku("07-backtracking/sudoku_null.csv")
+    test_sudoku(sudoku_null)
 
 
 if __name__ == "__main__":

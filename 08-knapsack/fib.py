@@ -23,17 +23,31 @@ def fib_mem(n: int, lookup: dict[int, int]) -> int:
 
     return lookup[n]
 
+def fib_pre(n: int) -> int:
+    if n <= 1:
+        return n
+    lookup: list[int] = [0]*(n+1)
+    lookup[0] = 0
+    lookup[1] = 1
+    for i in range(2,n+1):
+        lookup[i] = lookup[i-1] + lookup[i-2]
+
+    return lookup[n]
 
 def main() -> None:
-    lookup: dict[int, int] = {}
+    #lookup: dict[int, int] = {}
 
-    a = 20 # to je hned
-    # a = 30 # to už chvilku trvá
-    # a = 40 # za jak dlouho se asi dočkáme?
+    a = 500
 
-    measure_time(lambda: fib_cache(a), 100)
-    measure_time(lambda: fib_mem(a, lookup), 100)
-    measure_time(lambda: fib(a))
+    measure_time(lambda: fib_cache(a), 1)
+    measure_time(lambda: fib_mem(a, lookup = {}), 1)
+    measure_time(lambda: fib_pre(a), 1)
+    # measure_time(lambda: fib(a))
+
+
+
+    # print(fib_pre(a))
+    # print(fib_mem(a, lookup))
 
 
 if __name__ == "__main__":

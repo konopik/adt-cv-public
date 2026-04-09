@@ -83,3 +83,13 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+'''
+úpravy backtracking úlohy:
+    změna velikosti hrací plochy, změna pravidel, místo čísel písmena, jen malý zásah do kódu, ...
+
+'''

@@ -42,7 +42,7 @@ def print_snapshot(time: int, queues: list[tuple[str, deque]]) -> None:
 
 
 def main() -> None:
-    people_number = 1000
+    people_number = 100
     people_in_the_city = deque(list(range(people_number)))
 
     # 1. Vytvoření front
@@ -76,9 +76,9 @@ def main() -> None:
     ]
 
     # 3. Hlavní smyčka simulace
-    time = 3600
+    time = 3600*2
     for t in range(time+1):
-        if t%(60) == 0:
+        if t%(60*2) == 0:
             print_snapshot(t,queues_to_observe)
         for w in workers:
             worker_tick(w)

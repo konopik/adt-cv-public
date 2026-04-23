@@ -4,25 +4,21 @@ from utils import measure_time
 
 
 def fib(n: int) -> int:
-    if n <= 1:
-        return n
-    return fib(n - 1) + fib(n - 2)
+    # TODO implementujte.
+    return 0
 
 @functools.cache
 def fib_cache(n: int) -> int:
-    if n <= 1:
-        return n
-    return fib_cache(n - 1) + fib_cache(n - 2)
+    # TODO implementujte s functools.cache.
+    return 0
 
 def fib_mem(n: int, lookup: dict[int, int]) -> int:
-    if n <= 1:
-        return n
+    # TODO implementujte s explicitní pamětí.
+    return 0
 
-    if n not in lookup:
-        lookup[n] = fib_mem(n - 1,lookup) + fib_mem(n - 2,lookup)
-
-    return lookup[n]
-
+def fib_iter(n: int) -> int:
+    # TODO implementujte výpočtem zdola nahoru.    
+    return 0
 
 def main() -> None:
     lookup: dict[int, int] = {}
@@ -31,8 +27,9 @@ def main() -> None:
     # a = 30 # to už chvilku trvá
     a = 90 # za jak dlouho se asi dočkáme? Nikdy
 
-    measure_time(lambda: fib_cache(a), 100)
-    measure_time(lambda: fib_mem(a, lookup), 100)
+    measure_time(lambda: fib_cache(a), 100) # zkreslené, nemažeme cache
+    measure_time(lambda: fib_mem(a, {}), 100)
+    measure_time(lambda: fib_iter(a), 100)
     measure_time(lambda: fib(a))
 
 

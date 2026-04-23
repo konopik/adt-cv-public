@@ -17,13 +17,23 @@ class Graph:
 
     def add_edge(self, src: int, dst: int, weight: float = 0) -> None:
         # TODO 1 napište kód přidání hrany do datové struktury grafu
-        pass
+        if src not in self.edges:
+            self.edges[src] = []
+        if dst not in self.edges:
+            self.edges[dst] = []
+        self.edges[src].append((weight, dst))
+        self.edges[dst].append((weight, src))
 
 
 def load_graph(filename: str) -> Graph:
     graph = Graph()
 
     # TODO 2 vytvořte graf podle dat ze souboru
+    with open(filename, "r") as f:
+        graph_data = json.load(f)
+
+    for edge in graph_data["links"]:
+        graph.add_edge(edge["source"], edge["target"], edge["weight"])
 
     return graph
 
@@ -45,7 +55,7 @@ def spanning_tree(graph: Graph) -> None:
 
 
 def main() -> None:
-    graph = load_graph("09-spanning-tree/data/graph_grid_s3_3.json")
+    graph = load_graph("10-spanning-tree/data/graph_grid_s3_3.json")
 
     painter = adthelpers.painter.Painter(
         graph,

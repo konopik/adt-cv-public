@@ -3,8 +3,27 @@ import sys
 import timeit
 from typing import Iterable, Callable
 
-N_RUNS = 5
 
+N_RUNS = 10
+
+
+def load_customers(shop_path: str) -> list[str]:
+    customers: list[str] = []
+    with open(shop_path, "r", encoding="utf-8") as file:
+        try:
+            _ = file.readline()
+            lines = file.readlines()
+            for line in lines:
+                ln = line.strip()
+                split = ln.split(";")
+                time, ckpt, cid, price = split
+
+                customers.append(cid)
+        except Exception as e:
+            print(f"Something went wrong: {e}")
+
+
+    return customers
 
 def iter_checkpoints(shop_path: str) -> Iterable[tuple[str, str]]:
     """Načte data z konkrétní cesty a vrací páry (ckpt, id_zákazníka).
@@ -14,37 +33,53 @@ def iter_checkpoints(shop_path: str) -> Iterable[tuple[str, str]]:
     """
 
 
-def check_ckpt_list(shop_path: str) -> list[tuple[str, str]]:
+def check_ckpt_list(customers: list[str]) -> list[str]:
     """Varianta A: vrátí seznam unikátních párů (checkpoint, zákazník) pomocí listu."""
-    seen: list[tuple[str, str]] = []
+    seen: list[str] = []
+
+    for cust in customers:
+        if cust not in seen:
+            seen.append(cust)
+
     return seen
 
 
-def check_ckpt_set(shop_path: str) -> set[tuple[str, str]]:
+def check_ckpt_set(customers: list[str]) -> set[str]:
     """Varianta B: vrátí množinu unikátních párů (checkpoint, zákazník) pomocí setu."""
-    seen: set[tuple[str, str]] = set()
+    seen: set[str] = set()
+
+    for cust in customers:
+        seen.add(cust)
+
     return seen
 
 
-def measure(func: Callable, shop_path: str, n_runs: int = N_RUNS) -> float:
+def measure(func: Callable, customers: list[str], n_runs: int = N_RUNS) -> float:
     """Změří čas běhu funkce func(shop_path) pomocí timeit."""
-    return -1.0
+    return timeit.timeit(lambda: func(customers), number= n_runs)
 
 
 def experiment(data_path: str, city: str, shop: str, day: str = "1-Mon") -> None:
     shop_path = os.path.join(data_path, city, day, f"{shop}.txt")
 
-    print(f"Načítání dat: město={city}, obchod={shop}, den={day}")
-    unique_list = check_ckpt_list(shop_path)
-    unique_set = check_ckpt_set(shop_path)
-    print(f"Počet unikátních párů (checkpoint, zákazník) - list: {len(unique_list)}")
-    print(f"Počet unikátních párů (checkpoint, zákazník) - set:  {len(unique_set)}")
+    print(f"Načítání dat: město= {city}, obchod= {shop}, den= {day}")
 
-    t_list = measure(check_ckpt_list, shop_path)
+    customers = load_customers(shop_path)
+    print(f"Počet načtených záznamů: {len(customers)}")
+
+    unique_list = check_ckpt_list(customers)
+    unique_set = check_ckpt_set(customers)
+    print(f"Počet unikátních zákazníků - list: {len(unique_list)}")
+    print(f"Počet unikátních zákazníků - set:  {len(unique_set)}")
+
+    t_list = measure(check_ckpt_list, customers)
+    t_set = measure(check_ckpt_set, customers)
+    rychlost: float = t_list/t_set
+
     print(f"Varianta A (list), celkový čas pro {N_RUNS} běhů: {t_list:.4f} s")
-
-    t_set = measure(check_ckpt_set, shop_path)
     print(f"Varianta B (set),  celkový čas pro {N_RUNS} běhů: {t_set:.4f} s")
+
+    print(f"Set byl {rychlost:.0f}x rychlejší než List.")
 
 
 def main() -> None:

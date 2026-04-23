@@ -128,8 +128,8 @@ def demo() -> None:
 
 
 def pilsen() -> None:
-    edge_file = "10-dijkstra/pilsen/pilsen_edges_nice.csv"
-    node_file = "10-dijkstra/pilsen/pilsen_nodes.csv"
+    edge_file = "11-12-dijkstra/pilsen/pilsen_edges_nice.csv"
+    node_file = "11-12-dijkstra/pilsen/pilsen_nodes.csv"
     graph = load_graph_csv(edge_file)
     start = 4651
     end = 4569

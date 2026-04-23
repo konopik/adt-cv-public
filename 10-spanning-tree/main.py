@@ -7,9 +7,7 @@
 
 import json
 from queue import PriorityQueue
-
 import adthelpers
-
 
 class Graph:
     def __init__(self) -> None:
@@ -19,14 +17,12 @@ class Graph:
         # TODO 1 napište kód přidání hrany do datové struktury grafu
         pass
 
-
 def load_graph(filename: str) -> Graph:
     graph = Graph()
 
     # TODO 2 vytvořte graf podle dat ze souboru
 
     return graph
-
 
 def spanning_tree(graph: Graph) -> None:
     closed: set[int] = set()
@@ -43,9 +39,8 @@ def spanning_tree(graph: Graph) -> None:
 
     # TODO 3 Implementujte Prim-Jarníkův algoritmus pro nalezení minimální kostry
 
-
 def main() -> None:
-    graph = load_graph("09-spanning-tree/data/graph_grid_s3_3.json")
+    graph = load_graph("10-spanning-tree/data/graph_grid_s3_3.json")
 
     painter = adthelpers.painter.Painter(
         graph,
@@ -60,5 +55,11 @@ def main() -> None:
     input("Press enter to exit program...")
 
 
+
+
+
+
+
 if __name__ == "__main__":
+    print(" ")
     main()

@@ -75,6 +75,7 @@ def main() -> None:
         Worker("Pokladní", final_queue, finished_people, final_m,sf)
     ]
 
+    time = 0
     # 3. Hlavní smyčka simulace
     time = 3600*2
     for t in range(time+1):
@@ -84,6 +85,10 @@ def main() -> None:
             worker_tick(w)
         
 
+        if time % 60 == 0:
+            print_snapshot(time, queues_to_observe)
 
+    print(vege_queue)
+    
 if __name__ == "__main__":
     main()

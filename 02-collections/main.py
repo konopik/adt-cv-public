@@ -13,10 +13,25 @@ raw_data = [
     ("Marie Dvořáková", "A01N003", "Angličtina"),
 ]
 
-@dataclass(frozen=True)
+
 class Student:
     name: str
     os_cislo: str
+
+    def __init__(self, name: str, os_cislo: str):
+        self.name = name
+        self.os_cislo = os_cislo
+        
+    def __eq__(self, other):
+        if not isinstance(other, Student):
+            return False
+        return self.os_cislo == other.os_cislo and self.name == other.name
+    
+    def __hash__(self):
+        return hash((self.os_cislo, self.name))
+    
+    def __repr__(self) -> str:
+        return f"Student(name='{self.name}', os_cislo='{self.os_cislo}')"
 
 def get_unique_subjects(data: list[tuple[str, str, str]]) -> set[str]:
     """

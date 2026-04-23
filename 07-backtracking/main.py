@@ -12,35 +12,64 @@ class SudokuSolver:
         # list of lists (rows)
         loaded_rows: list[list[int]] = []
         # TODO implement loading of the file
-
+        with open(file_path,"r",encoding="utf-8")as file:
+            for line in file:
+                strip_line=line.strip()
+                split_line=strip_line.split(";")
+                tmp:list[int]=[]
+                for i in split_line:
+                    tmp.append(i.strip())
+                loaded_rows.append(tmp)
         # convert nested list to numpy array
         self.field = np.array(loaded_rows)
 
 
 
     def check_sequence(self, sequence: np.ndarray) -> bool:
-        return True
+        sequence_non_zero=sequence[sequence!=0]
+        return len(set(sequence_non_zero))==len(sequence_non_zero)
 
 
     def check_row(self, row_index: int) -> bool:
-        return False
+        return self.check_sequence(self.field[row_index,:])
+
 
     def check_column(self, column_index: int) -> bool:
-        return False
+        return self.check_sequence(self.field[:,column_index])
+
 
     def check_block(self, row_index: int, column_index: int) -> bool:
-        return False
+        row_start_index = (row_index//3)*3
+        column_start_index= (column_index//3)*3
+        return self.check_sequence(self.field[row_start_index:row_start_index+3,column_start_index:column_start_index+3].reshape(-1))
 
 
     def check_one_cell(self, row_index: int , column_index: int) -> bool:
-        return False
+        return self.check_row(row_index) and self.check_column(column_index) and self.check_block(row_index,column_index)
+
 
     def get_empty_cell(self) -> tuple[int, int] | None:
         """ Gets the coordinates of the next empty field. """
+        for col in range(9):
+            for row in range(9):
+                if self.field[row,col]==0:
+                    return row,col
         return None
-
     def solve(self) -> bool:
         """ Recursively solves the sudoku. """
+
+        empty_cell=self.get_empty_cell()
+
+        if not(empty_cell):
+            return True
+        row,col=empty_cell
+        for val in range(1,10):
+            self.field[row,col]=val
+            if self.check_one_cell(row,col) and self.solve():
+                return True
+
+        self.field[row,col]=0
+
         return False
 
 
@@ -49,6 +78,16 @@ class SudokuSolver:
 
 def main() -> None:
     sudoku_solver = SudokuSolver()
-
+    sudoku_solver.load("sudoku.csv")
+    print(sudoku_solver.field)
+    #sudoku_solver.field=[2,2]=6
+    for col in range(9):
+        for row in range(9):
+            print(f"cheking cell({row},{col}):{sudoku_solver.check_one_cell(row,col)}")
+    result=sudoku_solver.solve()
+    if result:
+        print(sudoku_solver.field)
+    else:
+        print("nope")
 if __name__ == "__main__":
     main()

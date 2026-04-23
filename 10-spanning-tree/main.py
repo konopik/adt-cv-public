@@ -45,7 +45,7 @@ def spanning_tree(graph: Graph) -> None:
 
 
 def main() -> None:
-    graph = load_graph("09-spanning-tree/data/graph_grid_s3_3.json")
+    graph = load_graph("10-spanning-tree/data/graph_grid_s3_3.json")
 
     painter = adthelpers.painter.Painter(
         graph,

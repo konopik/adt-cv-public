@@ -4,8 +4,10 @@ from utils import measure_time
 
 
 def fib(n: int) -> int:
-    # TODO implementujte.
-    return 0
+    if n <= 1:
+        return n
+
+    return fib(n - 1) + fib(n - 2)
 
 @functools.cache
 def fib_cache(n: int) -> int:

@@ -66,6 +66,7 @@ def main() -> None:
     vegetable_worker = Worker("Vegetable_worker", vegetable_queue, cashier_queue, vegetable_m)
     cashier_worker = Worker("Cashier_worker", cashier_queue, final_queue, final_m)
 
+    time = 0
     # 3. Hlavní smyčka simulace
     for i in range(2*3600 + 0*60 + 0):
         for worker in [street_worker, gate_worker, vegetable_worker, cashier_worker]:
@@ -78,6 +79,8 @@ def main() -> None:
     print_snapshot(7200, queues_to_observe)
     # print(f"People in vegetable queue: {len(vegetable_queue)}")
 
+    print(vege_queue)
+    
 if __name__ == "__main__":
     main()
     print(" ")

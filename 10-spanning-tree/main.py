@@ -57,9 +57,10 @@ def spanning_tree(graph: Graph) -> None:
         priority: int
         edge : tuple[int, int]
 
-        def __getitem__(self, key):
+        def __getitem__(self, key: int):
             if key > 1:
-                raise IndexError("PriorityEdge only has two fields: edge and priority")
+                msg = "PriorityEdge only has two fields: edge and priority"
+                raise IndexError(msg)
             return self.edge if key == 1 else self.priority
 
     pq: PriorityQueue[PriorityEdge] = PriorityQueue()
@@ -80,9 +81,6 @@ def spanning_tree(graph: Graph) -> None:
                 pq.put(PriorityEdge(int(edge[0]),(dst, edge[1])))
 
         painter.draw_graph(dst)
-
-
-
 
 def main() -> None:
     graph = load_graph("10-spanning-tree/data/graph_grid_s3_3.json")

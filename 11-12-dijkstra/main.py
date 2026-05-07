@@ -4,12 +4,13 @@
 # pip install git+https://github.com/JakubSido/adthelpers
 # nebo stáhnout zip a instalovat jako pip install <cesta_k_rozbalenému_zipu>
 
+import math
 import json
 from queue import PriorityQueue
-from tqdm import tqdm
+# from tqdm import tqdm
 import adthelpers
 
-import plotly.express as px
+# import plotly.express as px
 
 
 class Graph:
@@ -19,16 +20,22 @@ class Graph:
         self.edge_count = 0
 
     def add_edge(self, src: int, dst: int, weight: float = 0) -> None:
-        if src not in self.edges:
-            self.edges[src] = []
-        self.edges[src].append((weight, dst))
-        if dst not in self.edges:
-            self.edges[dst] = []
-        self.edges[dst].append((weight, src))
+        if self.oriented:
+            if src not in self.edges:
+                self.edges[src] = []
+            self.edges[src].append((weight, dst))
+        else:
+            if src not in self.edges:
+                self.edges[src] = []
+            self.edges[src].append((weight, dst))
+            if dst not in self.edges:
+                self.edges[dst] = []
+            self.edges[dst].append((weight, src))
 
     def dijkstra(
         self, start_id: int, end_id: int, show_progress: bool = True,
     ) -> tuple[dict[int, float], dict[int, int]]:
+
         closed: set[int] = set()
         sp_tree: list[tuple[int, int]] = []
         queue: PriorityQueue = PriorityQueue()
@@ -50,9 +57,25 @@ class Graph:
             painter = None
 
         # TODO 1 Implementujte Dijkstrův algoritmus pro nalezení nejkratší cesty
+        queue.put((0, start_id))
+        distances[start_id] = 0
+        predecessors[start_id] = -1
+        while not queue.empty():
+            current, current_id = queue.get()
+            if current_id in closed:
+                continue
+            if current_id == end_id:
+                break
+            for weight, neighbor in self.edges[current_id]:
+                if neighbor not in closed:
+                    new_distance = current + weight
+                    closed.add(current_id)
+                    if neighbor not in distances or new_distance < distances[neighbor]:
+                        distances[neighbor] = new_distance
+                        predecessors[neighbor] = current_id
+                        queue.put((new_distance, neighbor))
 
         return distances, predecessors
-
 
 def load_graph(filename: str) -> Graph:
     graph = Graph(directed=False)
@@ -66,21 +89,30 @@ def load_graph(filename: str) -> Graph:
 
     return graph
 
-
 def load_graph_csv(filename: str) -> Graph:
     graph = Graph(directed=True)
 
     # TODO 3 Načtěte graf z CSV souboru
-    return graph
+    with open(filename, encoding="utf-8") as file:
+        _ = file.readline()
+        lines = file.readlines()
+        for line in lines:
+            source,target,weight = line.split(",")
+            graph.add_edge(int(source), int(target), float(weight))
 
+    return graph
 
 def reconstruct_path(
     predecessors: dict[int, int], start_id: int, end_id: int,
 ) -> list[int]:
     path = []
     ## TODO 2 Implementujte funkci pro rekonstrukci cesty podle předchůdců
-    return path
-
+    path.append(end_id)
+    x = end_id
+    while x != start_id:
+        path.append(predecessors[x])
+        x = predecessors[x]
+    return path[::-1]
 
 def load_nodes_metadata(filename: str) -> dict[int, tuple[str, str]]:
     """Načte metadata o uzlech z CSV souboru. V případě GPS dat je možné zobrazit trasu na mapě
@@ -88,10 +120,17 @@ def load_nodes_metadata(filename: str) -> dict[int, tuple[str, str]]:
     Returns:
         dict[int, tuple[str, str]]: metadata uzlů (id uzlu, [latitude, longitude])
     """
-    node_info = {}
+    node_info: dict[int, tuple[str, str]] = {}
     ## TODO 4 Načtěte metadata o uzlech z CSV souboru
+    with open(filename, encoding="utf-8") as file:
+        _ = file.readline()
+        lines = file.readlines()
+        for line in lines:
+            id_node, point = line.split(",")
+            point = point.strip("POINT()")
+            latitude, longitude = point.split(" ")
+            node_info[int(id_node)] = (latitude, longitude)
     return node_info
-
 
 def show_path(
     node_info: dict[int, tuple[str, str]],  # metadata uzlů načtená pomocí load_nodes_metadata
@@ -110,9 +149,8 @@ def show_path(
         fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0}, mapbox_center_lat=49.747)
         fig.show()
 
-
 def demo() -> None:
-    graph = load_graph("10-dijkstra/graph_grid_s3_3.json")
+    graph = load_graph("C:\\Users\\rataja\\Documents\\Python\\ADT\\adt-cv-1\\10-spanning-tree\\data\\graph_grid_s3_3.json")
 
     # painter = adthelpers.painter.Painter(
     #     graph,
@@ -125,7 +163,6 @@ def demo() -> None:
     path = reconstruct_path(predecessors, start, end)
     print(path)
     print(distances[end])
-
 
 def pilsen() -> None:
     edge_file = "11-12-dijkstra/pilsen/pilsen_edges_nice.csv"
@@ -147,7 +184,6 @@ def main() -> None:
     # demo()
     pilsen()
     input("...")
-
 
 if __name__ == "__main__":
     main()

@@ -4,7 +4,15 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+<<<<<<< HEAD
 
+=======
+        
+        
+        
+
+        
+>>>>>>> 647550344f5f6c5bb77e147253782b678edc7ade
         {
             "name": "Python Debugger: Current File",
             "type": "debugpy",
@@ -12,7 +20,11 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
+<<<<<<< HEAD
                 "07-backtracking/sudoku.csv"
+=======
+                    "04-complexity_b\\output\\cities"
+>>>>>>> 647550344f5f6c5bb77e147253782b678edc7ade
             ]
         }
     ]

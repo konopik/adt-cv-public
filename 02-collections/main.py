@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+from collections import defaultdict
 # Testovací data: Jméno, Osobní číslo, Předmět
 # Takto vypadají data načtená například z CSV souboru nebo databáze.
 raw_data = [
@@ -13,22 +13,51 @@ raw_data = [
     ("Marie Dvořáková", "A01N003", "Angličtina"),
 ]
 
-@dataclass(frozen=True)
+
 class Student:
     name: str
     os_cislo: str
+
+    def __init__(self, name: str, os_cislo: str):
+        self.name = name
+        self.os_cislo = os_cislo
+        
+    def __eq__(self, other):
+        if not isinstance(other, Student):
+            return False
+        return self.os_cislo == other.os_cislo and self.name == other.name
+    
+    def __hash__(self):
+        return hash((self.os_cislo, self.name))
+    
+    def __repr__(self) -> str:
+        return f"Student(name='{self.name}', os_cislo='{self.os_cislo}')"
 
 def get_unique_subjects(data: list[tuple[str, str, str]]) -> set[str]:
     """
     Vrátí množinu unikátních předmětů.
     """
-    return set() # PLACEHOLDER
+    subject_set:set[str] = set()
+    for T in data:
+        subject = T[2]
+        subject_set.add(subject)
+    return subject_set # PLACEHOLDER
 
 def group_students_by_subject(data: list[tuple[str, str, str]]) -> dict[str, list[Student]]:
     """
     Vrátí slovník, kde klíčem je předmět a hodnotou seznam studentů (instancí třídy Student),
     kteří jsou na předmět zapsáni.
     """
+    students:dict[str,list[Student]] = dict()
+    for T in data:
+        name,number,subject = T[0],T[1],T[2]
+        if subject not in students.keys():
+            students[subject] = []
+        students[subject].append(Student(name,number))
+    return students
+        
+        
+        
     return {} # PLACEHOLDER
 
 def get_unique_students(data: list[tuple[str, str, str]]) -> set[Student]:
@@ -37,7 +66,11 @@ def get_unique_students(data: list[tuple[str, str, str]]) -> set[Student]:
     Pozor: Data obsahují duplicity (jeden student může mít více předmětů).
     Cílem je získat množinu fyzických osob.
     """
-    return set() # PLACEHOLDER
+    studentset:set[Student] = set()
+    for T in data:
+        name,number = T[0],T[1]
+        studentset.add(Student(name,number))
+    return studentset # PLACEHOLDER
 
 def main() -> None:
     print("--- ÚKOL 1: Unikátní předměty ---")

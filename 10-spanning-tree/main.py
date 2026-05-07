@@ -34,7 +34,13 @@ def load_graph(filename: str) -> Graph:
 
 
     # TODO 2 vytvořte graf podle dat ze souboru
-
+    with open(filename,'r') as f:
+        data = json.load(f)
+        for line in data['links']:
+            src = line['source']
+            dst = line['target']
+            w = line['weight']
+            graph.add_edge(src,dst,w)
     return graph
 
 
@@ -42,7 +48,7 @@ def spanning_tree(graph: Graph) -> None:
     closed: set[int] = set()
     sp_tree: list[tuple[int, int]] = []
     queue: PriorityQueue = PriorityQueue()
-
+    
     painter = adthelpers.painter.Painter(
         graph,
         visible=queue,

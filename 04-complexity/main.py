@@ -6,17 +6,30 @@ from typing import Iterable, Callable
 N_RUNS = 5
 
 
-def iter_checkpoints(shop_path: str) -> Iterable[tuple[str, str]]:
+def iter_checkpoints(shop_path: str) -> list[str]:
     """Načte data z konkrétní cesty a vrací páry (ckpt, id_zákazníka).
 
     Poznámka: Pokud bychom vraceli pouze ckpt (názvy checkpointů),
     bylo by jich jen ~20 unikátních, což je příliš málo na viditelný rozdíl.
     """
+    customers:list[str] = []
+    try:
+        with open(shop_path,'r',encoding='utf8') as f:
+            next(f)
+            for line in f:
+                line.strip()
+                splitted = line.split(';')
+                time, ckpt, cid, price = splitted
+                customers.append(cid)
+    except Exception as e:
+        print(f'Something wrong {e}')
+
+    return customers
 
 
-def check_ckpt_list(shop_path: str) -> list[tuple[str, str]]:
+def check_ckpt_list(shop_path: str) -> list[str]:
     """Varianta A: vrátí seznam unikátních párů (checkpoint, zákazník) pomocí listu."""
-    seen: list[tuple[str, str]] = []
+    seen: list[str] = []
     return seen
 
 

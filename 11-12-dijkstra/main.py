@@ -19,6 +19,7 @@ class Graph:
         self.edge_count = 0
 
     def add_edge(self, src: int, dst: int, weight: float = 0) -> None:
+        
         if src not in self.edges:
             self.edges[src] = []
         self.edges[src].append((weight, dst))
@@ -50,6 +51,39 @@ class Graph:
             painter = None
 
         # TODO 1 Implementujte Dijkstrův algoritmus pro nalezení nejkratší cesty
+        from dataclasses import dataclass, field
+        @dataclass(order=True)
+        class PriorityEdge:
+            priority:int
+            edge:tuple[int,int] = field(compare=False)
+            def __getitem__(self, key):
+                if key > 1:
+                    raise IndexError
+                return self.edge if key == 1 else self.priority
+        distances[start_id] = 0
+        queue.put(PriorityEdge(0,(-1,start_id)))
+        while not queue.empty():
+            current_priority,(start,dist) = queue.get()
+            if dist not in closed:
+                closed.add(dist)
+                if painter:
+                    painter.draw_graph(active=dist)
+                if start != dist:
+                    predecessors[dist] = start
+                    sp_tree.append((start,dist))
+
+                if dist == end_id:
+                    break
+                for weight, neightbor in self.edges[dist]:
+                    if neightbor in closed:
+                        continue
+                    new_distance = distances[dist] + weight
+
+                    if neightbor not in distances or new_distance < distances[neightbor]:
+                        distances[neightbor] = new_distance
+                        queue.put(PriorityEdge(new_distance,(dist,neightbor)))
+
+
 
         return distances, predecessors
 
@@ -69,8 +103,22 @@ def load_graph(filename: str) -> Graph:
 
 def load_graph_csv(filename: str) -> Graph:
     graph = Graph(directed=True)
+    with open(filename,'r',encoding='utf8') as f:
+        next(f)
+        for line in f:
+            data = line.split(',')
+            start = int(data[0])
+            target = int(data[1])
+            weight = float(data[2])
+            if start in graph.edges:
+                graph.edges[start].append((weight,target))
+            else:
+                graph.edges[start] = []
+                graph.edges[start].append((weight,target))
+
 
     # TODO 3 Načtěte graf z CSV souboru
+
     return graph
 
 
@@ -79,7 +127,15 @@ def reconstruct_path(
 ) -> list[int]:
     path = []
     ## TODO 2 Implementujte funkci pro rekonstrukci cesty podle předchůdců
+    current = end_id
+    while current is not None:
+        path.append(current)
+        if current == start_id:
+            break
+        current = predecessors.get(current)
+    path.reverse()
     return path
+
 
 
 def load_nodes_metadata(filename: str) -> dict[int, tuple[str, str]]:
@@ -90,6 +146,7 @@ def load_nodes_metadata(filename: str) -> dict[int, tuple[str, str]]:
     """
     node_info = {}
     ## TODO 4 Načtěte metadata o uzlech z CSV souboru
+    
     return node_info
 
 
@@ -112,7 +169,7 @@ def show_path(
 
 
 def demo() -> None:
-    graph = load_graph("10-dijkstra/graph_grid_s3_3.json")
+    graph = load_graph("10-spanning-tree/data/graph_grid_s3_3.json")
 
     # painter = adthelpers.painter.Painter(
     #     graph,
@@ -128,8 +185,8 @@ def demo() -> None:
 
 
 def pilsen() -> None:
-    edge_file = "10-dijkstra/pilsen/pilsen_edges_nice.csv"
-    node_file = "10-dijkstra/pilsen/pilsen_nodes.csv"
+    edge_file = "11-12-dijkstra/pilsen/pilsen_edges_nice.csv"
+    node_file = "11-12-dijkstra/pilsen/pilsen_nodes.csv"
     graph = load_graph_csv(edge_file)
     start = 4651
     end = 4569
@@ -144,7 +201,7 @@ def pilsen() -> None:
 
 
 def main() -> None:
-    # demo()
+    #demo()
     pilsen()
     input("...")
 

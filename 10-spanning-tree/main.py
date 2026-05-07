@@ -9,6 +9,7 @@ import json
 from queue import PriorityQueue
 from collections import defaultdict
 import adthelpers
+from dataclasses import dataclass,field
 
 
 class Graph:
